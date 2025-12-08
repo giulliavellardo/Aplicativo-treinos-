@@ -1,8 +1,43 @@
-// app.js — versão corrigida compatível com index.html (btnTreino / btnHistorico)
-// Seleciona conteúdo (script está no final do body no seu index.html)
+// ----------------------
+// app.js — versão completa corrigida
+// ----------------------
+
+// ----------------------
+// Slideshow de fundo suave
+// ----------------------
+const slides = [
+  'img/bg1.jpg',
+  'img/bg2.jpg',
+  'img/bg3.jpg'
+];
+
+const container = document.createElement('div');
+container.className = 'slideshow';
+document.body.prepend(container); // fica atrás do conteúdo
+
+slides.forEach(src => {
+  const div = document.createElement('div');
+  div.className = 'slide';
+  div.style.backgroundImage = `url(${src})`;
+  container.appendChild(div);
+});
+
+const slideElements = document.querySelectorAll('.slide');
+let currentSlide = 0;
+slideElements[currentSlide].classList.add('active');
+
+setInterval(() => {
+  slideElements[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + 1) % slideElements.length;
+  slideElements[currentSlide].classList.add('active');
+}, 5000); // troca a cada 5s
+
+// ----------------------
+// Conteúdo do site
+// ----------------------
 const conteudo = document.getElementById("conteudo");
 
-// Lista de aparelhos (objeto com nome e grupo)
+// Lista de aparelhos
 const aparelhos = [
   { nome: "Cadeira extensora", grupo: "Pernas" },
   { nome: "Cadeira flexora", grupo: "Pernas" },
@@ -40,13 +75,19 @@ const aparelhos = [
   { nome: "Escada stepper", grupo: "Cardio" }
 ];
 
-// Carrega histórico usando a mesma chave que seu código antigo
-let historico = JSON.parse(localStorage.getItem("fitlog_historico") || "[]");
+// Histórico
+let historico;
+try {
+  historico = JSON.parse(localStorage.getItem("fitlog_historico")) || [];
+} catch (e) {
+  historico = [];
+}
 
 // ----------------------
-// Renderiza lista de aparelhos (registro)
+// Renderiza lista de aparelhos
 // ----------------------
 function renderLista(filtro = "") {
+  window.scrollTo(0,0); // garante que a página volte ao topo
   let html = `
     <h2>Registrar Treino</h2>
     <input type="text" placeholder="Buscar aparelho..." 
@@ -69,7 +110,6 @@ function renderLista(filtro = "") {
   for (let grupo in grupos) {
     html += `<h3>${grupo}</h3>`;
     grupos[grupo].forEach((nome, idx) => {
-      // id único por nome (pode repetir em grupos diferentes, mas ok)
       const id = `chk_${grupo.replace(/\s+/g,'_')}_${idx}`;
       html += `
         <div class="aparelho-item">
@@ -97,7 +137,7 @@ function renderLista(filtro = "") {
     searchBox.addEventListener("input", (e) => renderLista(e.target.value));
   }
 
-  // Marcar check (apenas para classe visual)
+  // Marcar check visual
   document.querySelectorAll(".aparelho-item input[type='checkbox']")
     .forEach(cb => {
       cb.addEventListener("change", () => {
@@ -106,7 +146,7 @@ function renderLista(filtro = "") {
       });
     });
 
-  // Salvar
+  // Salvar treino
   const btnFinalizar = document.getElementById("btnFinalizar");
   if (btnFinalizar) {
     btnFinalizar.addEventListener("click", () => {
@@ -115,7 +155,6 @@ function renderLista(filtro = "") {
       document.querySelectorAll(".aparelho-item input[type='checkbox']")
         .forEach(cb => {
           if (cb.checked) {
-            // pega só o texto do label ao lado do checkbox
             const label = cb.closest(".aparelho-item").querySelector("label");
             const text = label ? label.innerText.replace("✅", "").trim() : "";
             if (text) marcados.push(text);
@@ -138,16 +177,16 @@ function renderLista(filtro = "") {
 }
 
 // ----------------------
-// Renderiza histórico (com proteção contra dados quebrados)
+// Renderiza histórico
 // ----------------------
 function renderHistorico() {
+  window.scrollTo(0,0);
   let html = "<h2>Histórico</h2>";
 
   if (!Array.isArray(historico) || historico.length === 0) {
     html += "<p>Nenhum treino salvo ainda.</p>";
   } else {
     historico.slice().reverse().forEach(reg => {
-
       const listaAparelhos = Array.isArray(reg.aparelhos)
         ? reg.aparelhos.join(", ")
         : "-";
@@ -167,7 +206,7 @@ function renderHistorico() {
 }
 
 // ----------------------
-// Botões do menu — conecta aos IDs do seu index.html
+// Inicialização do menu
 // ----------------------
 document.addEventListener("DOMContentLoaded", () => {
   const btnTreino = document.getElementById("btnTreino");
@@ -176,6 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnTreino) btnTreino.addEventListener("click", () => renderLista());
   if (btnHistorico) btnHistorico.addEventListener("click", () => renderHistorico());
 
-  // mostra mensagem inicial
+  // mensagem inicial
   conteudo.innerHTML = '<p>Selecione uma opção acima para começar.</p>';
 });

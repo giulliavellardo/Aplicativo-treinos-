@@ -1,26 +1,42 @@
-/* ---- FUNDO COM IMAGENS PASSANDO ---- */
+/* ---- FUNDO COM SLIDES SUAVES (SEM ZOOM, SEM BORDA, SEM BUG) ---- */
 
-body {
+body, html {
     margin: 0;
     padding: 0;
-    background-size: cover;
-    background-position: center;
-    animation: slide 20s infinite;
+    height: 100%;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     text-align: center;
+    overflow: hidden; /* evita scroll indesejado */
 }
 
-/* Troca automaticamente as imagens do fundo */
-@keyframes slide {
-    0%   { background-image: url("img/bg1.jpg"); }
-    25%  { background-image: url("img/bg2.jpg"); }
-    50%  { background-image: url("img/bg3.jpg"); }
-    75%  { background-image: url("img/bg4.jpg"); }
-    100% { background-image: url("img/bg1.jpg"); }
+/* container do slideshow */
+.slideshow {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* atrás de todo conteúdo */
 }
 
-/* ---- SEU CSS ORIGINAL ---- */
+/* cada slide */
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;       /* ocupa a tela inteira */
+    background-position: center;  /* centraliza */
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+/* ---- SEU CSS ORIGINAL (SEM ALTERAÇÕES) ---- */
 
 h1 {
     color: #b06cff;

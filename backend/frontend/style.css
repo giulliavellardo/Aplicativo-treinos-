@@ -1,11 +1,26 @@
+/* ---- FUNDO COM IMAGENS PASSANDO ---- */
+
 body {
     margin: 0;
     padding: 0;
-    background: #0d0d0d;
+    background-size: cover;
+    background-position: center;
+    animation: slide 20s infinite;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     text-align: center;
 }
+
+/* Troca automaticamente as imagens do fundo */
+@keyframes slide {
+    0%   { background-image: url("img/bg1.jpg"); }
+    25%  { background-image: url("img/bg2.jpg"); }
+    50%  { background-image: url("img/bg3.jpg"); }
+    75%  { background-image: url("img/bg4.jpg"); }
+    100% { background-image: url("img/bg1.jpg"); }
+}
+
+/* ---- SEU CSS ORIGINAL ---- */
 
 h1 {
     color: #b06cff;
@@ -115,16 +130,16 @@ input[type="checkbox"] {
 .diario {
     margin-top: 20px;
     padding: 15px;
-    background-color: #1a1a1a; /* fundo escuro */
+    background-color: #1a1a1a;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(128, 0, 128, 0.6); /* sombra roxa */
+    box-shadow: 0 0 10px rgba(128, 0, 128, 0.6);
     color: #fff;
     font-family: 'Arial', sans-serif;
 }
 
 .diario h3 {
     margin-top: 0;
-    color: #d6aaff; /* roxo claro */
+    color: #d6aaff;
 }
 
 .diario textarea {
@@ -142,7 +157,7 @@ input[type="checkbox"] {
 #btnFinalizar {
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: #00c853; /* verde brilhante */
+    background-color: #00c853;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -153,6 +168,6 @@ input[type="checkbox"] {
 }
 
 #btnFinalizar:hover {
-    background-color: #00e676; /* verde mais claro no hover */
+    background-color: #00e676;
     transform: scale(1.05);
 }
